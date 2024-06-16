@@ -18,3 +18,12 @@ class DBManager:
         self.cur.execute(query)
         return {row[0]: row[1] for row in self.cur.fetchall()}
 
+    def get_all_vacancies(self):
+        """Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на
+        вакансию."""
+        query = """
+        SELECT job_title, company_name, salary_from, link_to_vacancy FROM vacancies
+        """
+        self.cur.execute(query)
+        return self.cur.fetchall()
+
