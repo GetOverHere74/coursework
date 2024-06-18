@@ -30,3 +30,24 @@ def create_db(name, params):
 
     except Exception as e:
         return f"Произошла ошибка: {e}"
+
+
+def insert_data(conn, info: str):
+    """Сохранение данных о компаниях и вакансиях в БД pgAdmin."""
+
+    insert_query = """
+    INSERT INTO vacancies (company_name, job_title, link_to_vacancy, salary_from, currency, description, requirement)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """
+    with conn.cursor() as cur:
+        for record in vacancies:
+            cur.execute(
+                """
+                INSERT INTO employers (company_id, company_name, company_url) VALUES (%s, %s, %s)
+                """,
+                (record['company_id'], record['company_name'], record['company_url']))
+            cur.execute(insert_query, (record['company_name'], record['job_title'], record['link_to_vacancy'],
+                                       record['salary_from'], record['currency'], record['description'],
+                                       record['requirement']))
+        conn.commit()
+        conn.close()
